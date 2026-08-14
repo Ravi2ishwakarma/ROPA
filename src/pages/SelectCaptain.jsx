@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { useNavigate } from "react-router-dom";
 const captains = [
   {
     id: 1,
@@ -92,6 +92,7 @@ const StepTitle = ({ title, subtitle }) => (
 );
 
 export default function SelectCaptain() {
+  const navigate = useNavigate();
   const [selectedCaptain, setSelectedCaptain] = useState(null);
   const [showAll, setShowAll] = useState(false);
 
@@ -100,6 +101,35 @@ export default function SelectCaptain() {
     : captains.slice(0, 4);
 
   const progress = selectedCaptain ? 100 : 0;
+
+  const handleContinue = () => {
+    if (!selectedCaptain) return;
+
+    const tourData = {
+      places: selectedPlaces,
+      duration,
+      customHours,
+      vehicle: selectedVehicle,
+      captain: selectedCaptain,
+      pickupLocation,
+      placesCharge: selectedPlaces.length * 150,
+      vehicleCharge: selectedVehicle?.price || 0,
+      durationCharge:
+        duration === "Custom"
+          ? Number(customHours || 0) * 200
+          : durationPrice[duration] || 0,
+      total:
+        selectedPlaces.length * 150 +
+        (selectedVehicle?.price || 0) +
+        (duration === "Custom"
+          ? Number(customHours || 0) * 200
+          : durationPrice[duration] || 0),
+    };
+
+    navigate("/tour-payment", {
+      state: tourData,
+    });
+  };
 
   return (
     <motion.div
@@ -164,11 +194,10 @@ export default function SelectCaptain() {
                   key={captain.id}
                   whileHover={{ y: -2 }}
                   onClick={() => setSelectedCaptain(captain)}
-                  className={`relative cursor-pointer rounded-3xl border p-5 transition-all ${
-                    selected
+                  className={`relative cursor-pointer rounded-3xl border p-5 transition-all ${selected
                       ? "border-blue-500 bg-blue-50 shadow-lg"
                       : "border-gray-200 hover:border-blue-300 hover:shadow-md"
-                  }`}
+                    }`}
                 >
 
                   {selected && (
@@ -269,11 +298,10 @@ export default function SelectCaptain() {
                           e.stopPropagation();
                           setSelectedCaptain(captain);
                         }}
-                        className={`mt-4 px-4 py-2 rounded-xl text-sm font-semibold transition ${
-                          selected
+                        className={`mt-4 px-4 py-2 rounded-xl text-sm font-semibold transition ${selected
                             ? "bg-blue-600 text-white"
                             : "bg-gray-900 text-white hover:bg-blue-600"
-                        }`}
+                          }`}
                       >
                         {selected
                           ? "Selected ✓"
@@ -565,9 +593,7 @@ export default function SelectCaptain() {
               </div>
 
               <button
-                onClick={() =>
-                  alert("Proceeding to booking confirmation")
-                }
+                onClick={handleContinue}
                 className="px-7 py-3 rounded-xl bg-gray-900 text-white font-semibold hover:bg-blue-600 transition"
               >
                 Confirm Tour →

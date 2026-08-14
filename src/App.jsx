@@ -10,6 +10,7 @@ import Navbar from "./components/Navbar";
 import CityTour from "./components/CityTour";
 import CustomTour from "./pages/CustomTour";
 import SelectCaptain from "./pages/SelectCaptain";
+import TourPayment from "./pages/TourPayment";
 function App() {
   const [count, setCount] = useState(0)
 
@@ -32,6 +33,8 @@ function App() {
         <Route path="/tour" element={<CityTour/>}/>
         <Route path="/customtour" element={<CustomTour/>}/>
         <Route path="/tourcaptain" element={<SelectCaptain/>}/>
+        <Route path="/tour-payment" element={<TourPayment/>}/>
+
       </Routes>
       <Footer/>
     </>

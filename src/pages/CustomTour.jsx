@@ -56,6 +56,8 @@ export default function CustomTourBuilder() {
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [customHours, setCustomHours] = useState("");
   const [pickupLocation, setPickupLocation] = useState("");
+  const navigate = useNavigate();
+
 
   const handlePlaceSelect = (place) => {
     setSelectedPlaces((prev) =>
@@ -90,7 +92,7 @@ export default function CustomTourBuilder() {
   const estimatedPrice =
     placesCharge + vehicleCharge + durationCharge;
 
-  
+
   const completedSteps = [
     selectedPlaces.length > 0,
     selectedVehicle,
@@ -101,6 +103,44 @@ export default function CustomTourBuilder() {
   const progress = Math.round((completedSteps / 4) * 100);
 
   const tourComplete = completedSteps === 4;
+
+  const handleSelectCaptain = () => {
+    if (selectedPlaces.length === 0) {
+      alert("Please select at least one place.");
+      return;
+    }
+
+    if (!selectedVehicle) {
+      alert("Please select a vehicle.");
+      return;
+    }
+
+    if (!pickupLocation) {
+      alert("Please select pickup location.");
+      return;
+    }
+
+    if (duration === "Custom" && !customHours) {
+      alert("Please enter custom hours.");
+      return;
+    }
+
+    navigate("/select-captain", {
+      state: {
+        selectedPlaces,
+        duration,
+        customHours,
+        selectedVehicle,
+        pickupLocation,
+        placesCharge: selectedPlaces.length * 150,
+        vehicleCharge: selectedVehicle.price,
+        durationCharge:
+          duration === "Custom"
+            ? Number(customHours) * 200
+            : durationPrice[duration],
+      },
+    });
+  };
 
   return (
     <motion.div
@@ -153,11 +193,10 @@ export default function CustomTourBuilder() {
                     whileHover={{ y: -2 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => handlePlaceSelect(place)}
-                    className={`text-left p-4 rounded-2xl border transition-all ${
-                      selected
+                    className={`text-left p-4 rounded-2xl border transition-all ${selected
                         ? "border-blue-500 bg-blue-50 shadow-sm"
                         : "border-gray-200 hover:border-blue-300 hover:bg-gray-50"
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-medium text-gray-800">
@@ -165,11 +204,10 @@ export default function CustomTourBuilder() {
                       </span>
 
                       <span
-                        className={`w-6 h-6 rounded-full flex items-center justify-center text-sm ${
-                          selected
+                        className={`w-6 h-6 rounded-full flex items-center justify-center text-sm ${selected
                             ? "bg-blue-600 text-white"
                             : "border border-gray-300"
-                        }`}
+                          }`}
                       >
                         {selected ? "✓" : ""}
                       </span>
@@ -228,11 +266,10 @@ export default function CustomTourBuilder() {
                   key={item}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => setDuration(item)}
-                  className={`py-4 rounded-2xl border font-semibold transition ${
-                    duration === item
+                  className={`py-4 rounded-2xl border font-semibold transition ${duration === item
                       ? "bg-blue-600 text-white border-blue-600"
                       : "border-gray-200 hover:border-blue-300"
-                  }`}
+                    }`}
                 >
                   {item}
                 </motion.button>
@@ -278,11 +315,10 @@ export default function CustomTourBuilder() {
                     whileHover={{ y: -4 }}
                     whileTap={{ scale: 0.97 }}
                     onClick={() => setSelectedVehicle(vehicle)}
-                    className={`relative p-3 rounded-2xl border transition ${
-                      selected
+                    className={`relative p-3 rounded-2xl border transition ${selected
                         ? "border-blue-500 bg-blue-50 shadow-md"
                         : "border-gray-200 hover:border-blue-300"
-                    }`}
+                      }`}
                   >
                     {selected && (
                       <span className="absolute top-2 right-2 bg-blue-600 text-white rounded-full w-6 h-6 text-xs flex items-center justify-center">
@@ -380,12 +416,12 @@ export default function CustomTourBuilder() {
                     </p>
                   </div>
 
-                  <Link
-                    to="/tourcaptain"
+                  <button
+                    onClick={handleSelectCaptain}
                     className="px-6 py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-semibold transition whitespace-nowrap"
                   >
                     Continue →
-                  </Link>
+                  </button>
                 </div>
               </motion.div>
             )}
@@ -552,19 +588,17 @@ export default function CustomTourBuilder() {
               </div>
 
               <div
-                className={`rounded-2xl p-4 ${
-                  tourComplete
+                className={`rounded-2xl p-4 ${tourComplete
                     ? "bg-green-500/10"
                     : "bg-blue-500/10"
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-3">
                   <span
-                    className={`w-3 h-3 rounded-full ${
-                      tourComplete
+                    className={`w-3 h-3 rounded-full ${tourComplete
                         ? "bg-green-400"
                         : "bg-blue-400 animate-pulse"
-                    }`}
+                      }`}
                   />
 
                   <div>
@@ -577,9 +611,8 @@ export default function CustomTourBuilder() {
                     <p className="text-xs text-gray-400 mt-1">
                       {tourComplete
                         ? "All required details are complete."
-                        : `${4 - completedSteps} step${
-                            4 - completedSteps > 1 ? "s" : ""
-                          } remaining`}
+                        : `${4 - completedSteps} step${4 - completedSteps > 1 ? "s" : ""
+                        } remaining`}
                     </p>
                   </div>
                 </div>

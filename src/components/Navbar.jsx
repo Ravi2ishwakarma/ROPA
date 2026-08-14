@@ -92,35 +92,56 @@ const Navbar = () => {
             </Link>
 
             <Link
-              to="/services"
-              onClick={() => setIsOpen(false)}
-              className="hover:text-blue-600"
-            >
-              Rent Vehicle
-            </Link>
-
-            <Link
-              to="/ship"
-              onClick={() => setIsOpen(false)}
-              className="hover:text-blue-600"
-            >
-              Ship Parcel
-            </Link>
-
-            <Link
-              to="/drive"
-              onClick={() => setIsOpen(false)}
-              className="hover:text-blue-600"
-            >
-              Drive with Us
-            </Link>
-
-            <Link
               to="/ride"
               onClick={() => setIsOpen(false)}
               className="hover:text-blue-600"
             >
-              Let's Ride
+              Rides
+            </Link>
+
+            <Link
+              to="/parcel"
+              onClick={() => setIsOpen(false)}
+              className="hover:text-blue-600"
+            >
+              Parcel Delivery
+            </Link>
+
+            <Link
+              to="/rental"
+              onClick={() => setIsOpen(false)}
+              className="hover:text-blue-600"
+            >
+              Vehicle Rental
+            </Link>
+
+            <Link
+              to="/tour"
+              onClick={() => setIsOpen(false)}
+              className="hover:text-blue-600"
+            >
+              City Tours
+            </Link>
+            <Link
+              to="/shop"
+              onClick={() => setIsOpen(false)}
+              className="hover:text-blue-600"
+            >
+              Shop
+            </Link>
+            <Link
+              to="/about"
+              onClick={() => setIsOpen(false)}
+              className="hover:text-blue-600"
+            >
+              About Us
+            </Link>
+            <Link
+              to="/contact"
+              onClick={() => setIsOpen(false)}
+              className="hover:text-blue-600"
+            >
+              Contact Us
             </Link>
 
             <div className="flex flex-col gap-3 mt-4">
