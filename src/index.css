@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+.bbord:hover{
+    border-bottom: solid blue 2px;
+}
+.wave {
+  position: absolute;
+  width: 200%;
+  height: 100px;
+  left: -50%;
+  top: -30px;
+  border-radius: 40%;
+}
+
+.wave1 {
+  background: rgba(255,255,255,0.5);
+  animation: waveMove 6s linear infinite;
+}
+
+.wave2 {
+  background: rgba(255,255,255,0.25);
+  animation: waveMoveReverse 8s linear infinite;
+}
+
+@keyframes waveMove {
+  0% {
+    transform: translateX(0) rotate(0deg);
+  }
+
+  100% {
+    transform: translateX(-25%) rotate(360deg);
+  }
+}
+
+@keyframes waveMoveReverse {
+  0% {
+    transform: translateX(0) rotate(360deg);
+  }
+
+  100% {
+    transform: translateX(-25%) rotate(0deg);
+  }
+}
