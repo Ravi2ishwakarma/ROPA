@@ -104,258 +104,420 @@ export default function CityTour() {
 
           <div className="absolute inset-0" />
 
-          <div className="absolute mt-30 inset-0 flex items-center">
+          <div className="absolute inset-0 flex items-center">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full">
 
-            <div className="max-w-7xl mx-auto px-6 w-full">
-
-              <div>
-
+              <div className="mb-8 sm:mb-10">
                 <div className="max-w-xl text-black">
 
-                  <h1 className="text-5xl font-bold mb-4">
+                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight mb-4">
                     Explore The City
                     <br />
                     Your Way With ROPA
                   </h1>
 
-                  <p className="text-lg mb-8">
+                  <p className="text-base sm:text-lg leading-relaxed mb-6 sm:mb-8 max-w-lg">
                     Choose pre-built tours or create your own
-                    custom tour and enjoy a memorable
-                    experience.
+                    custom tour and enjoy a memorable experience.
                   </p>
 
                 </div>
+              </div>
 
-                <div className="w-full max-w-5xl mx-auto">
+              <div className="w-full max-w-5xl mx-auto">
 
-                  <div className="bg-white h-22 rounded-2xl shadow-lg p-3 flex items-center gap-2">
+                <div
+                  className="
+          bg-white
+          rounded-2xl
+          shadow-lg
+          p-3
+          flex
+          flex-col
+          lg:flex-row
+          lg:items-center
+          gap-2
+        "
+                >
+                  <div className="relative flex-1 min-w-0">
 
-                    <div className="relative flex-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowCities(!showCities);
+                        setShowGuests(false);
+                      }}
+                      className="
+              w-full
+              flex
+              items-center
+              gap-3
+              px-4
+              sm:px-5
+              py-3
+              rounded-xl
+              hover:bg-gray-50
+              transition
+              text-left
+            "
+                    >
 
-                      <button
-                        onClick={() => {
-                          setShowCities(!showCities);
-                          setShowGuests(false);
-                        }}
-                        className="w-full flex items-center gap-3 px-5 py-3 rounded-xl hover:bg-gray-50 text-left"
+                      <MapPin
+                        size={22}
+                        className="text-orange-500 flex-shrink-0"
+                      />
+
+                      <div className="flex-1 min-w-0">
+
+                        <p className="text-xs text-gray-500">
+                          Select City
+                        </p>
+
+                        <p className="font-semibold text-gray-800 truncate">
+                          {city}
+                        </p>
+
+                      </div>
+
+                      <ChevronDown
+                        size={18}
+                        className="text-gray-500 flex-shrink-0"
+                      />
+                    </button>
+
+                    {showCities && (
+                      <div
+                        className="
+                absolute
+                top-full
+                left-0
+                mt-2
+                w-full
+                bg-white
+                rounded-xl
+                shadow-xl
+                border
+                z-50
+                overflow-hidden
+              "
                       >
 
-                        <MapPin
-                          size={22}
-                          className="text-orange-500"
-                        />
+                        {cities.map((item) => (
+                          <button
+                            key={item}
+                            type="button"
+                            onClick={() => {
+                              setCity(item);
+                              setShowCities(false);
+                            }}
+                            className="
+                    w-full
+                    text-left
+                    px-5
+                    py-3
+                    hover:bg-blue-50
+                    text-gray-700
+                    transition
+                  "
+                          >
+                            {item}
+                          </button>
+                        ))}
 
-                        <div className="flex-1">
+                      </div>
+                    )}
 
-                          <p className="text-xs text-gray-500">
-                            Select City
-                          </p>
+                  </div>
+                  <div className="hidden lg:block h-12 w-px bg-gray-200" />
+                  <div className="block lg:hidden h-px w-full bg-gray-200" />
 
-                          <p className="font-semibold text-gray-800">
-                            {city}
-                          </p>
+                  <div className="relative flex-1 min-w-0">
 
-                        </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        document
+                          .getElementById("tour-date-picker")
+                          ?.showPicker();
+                      }}
+                      className="
+              w-full
+              flex
+              items-center
+              gap-3
+              px-4
+              sm:px-5
+              py-3
+              rounded-xl
+              hover:bg-gray-50
+              transition
+              text-left
+            "
+                    >
 
-                        <ChevronDown
-                          size={18}
-                          className="text-gray-500"
-                        />
+                      <CalendarDays
+                        size={22}
+                        className="text-orange-500 flex-shrink-0"
+                      />
 
-                      </button>
+                      <div className="flex-1 min-w-0">
 
-                      {showCities && (
+                        <p className="text-xs text-gray-500">
+                          Select Date
+                        </p>
 
-                        <div className="absolute top-full left-0 mt-2 w-full bg-white rounded-xl shadow-xl border z-50 overflow-hidden">
+                        <p className="font-semibold text-gray-800 truncate">
+                          {date
+                            ? new Date(
+                              date + "T00:00:00"
+                            ).toLocaleDateString(
+                              "en-IN",
+                              {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                              }
+                            )
+                            : "Choose your date"}
+                        </p>
 
-                          {cities.map((item) => (
+                      </div>
+
+                      <ChevronDown
+                        size={18}
+                        className="text-gray-500 flex-shrink-0"
+                      />
+
+                    </button>
+
+                    <input
+                      id="tour-date-picker"
+                      type="date"
+                      value={date}
+                      onChange={(e) => setDate(e.target.value)}
+                      min={new Date().toISOString().split("T")[0]}
+                      className="
+              absolute
+              opacity-0
+              pointer-events-none
+              w-0
+              h-0
+            "
+                    />
+
+                  </div>
+                  <div className="hidden lg:block h-12 w-px bg-gray-200" />
+                  <div className="block lg:hidden h-px w-full bg-gray-200" />
+                  <div className="relative flex-1 min-w-0">
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowGuests(!showGuests);
+                        setShowCities(false);
+                      }}
+                      className="
+              w-full
+              flex
+              items-center
+              gap-3
+              px-4
+              sm:px-5
+              py-3
+              rounded-xl
+              hover:bg-gray-50
+              transition
+              text-left
+            "
+                    >
+
+                      <Users
+                        size={22}
+                        className="text-orange-500 flex-shrink-0"
+                      />
+
+                      <div className="flex-1 min-w-0">
+
+                        <p className="text-xs text-gray-500">
+                          Guests
+                        </p>
+
+                        <p className="font-semibold text-gray-800 truncate">
+                          {adults} Adults, {children} Child
+                          {children !== 1 && "ren"}
+                        </p>
+
+                      </div>
+
+                      <ChevronDown
+                        size={18}
+                        className="text-gray-500 flex-shrink-0"
+                      />
+
+                    </button>
+                    {showGuests && (
+                      <div
+                        className="
+                absolute
+                top-full
+                right-0
+                mt-2
+                w-full
+                sm:w-72
+                bg-white
+                rounded-xl
+                shadow-xl
+                border
+                p-5
+                z-50
+              "
+                      >
+                        <div className="flex items-center justify-between mb-5">
+
+                          <div>
+                            <p className="font-semibold text-gray-800">
+                              Adults
+                            </p>
+
+                            <p className="text-xs text-gray-500">
+                              Age 13+
+                            </p>
+                          </div>
+
+                          <div className="flex items-center gap-3">
 
                             <button
-                              key={item}
-                              onClick={() => {
-                                setCity(item);
-                                setShowCities(false);
-                              }}
-                              className="w-full text-left px-5 py-3 hover:bg-blue-50 text-gray-700"
+                              type="button"
+                              disabled={adults <= 1}
+                              onClick={() =>
+                                setAdults(Math.max(1, adults - 1))
+                              }
+                              className="
+                      w-8
+                      h-8
+                      rounded-full
+                      border
+                      flex
+                      items-center
+                      justify-center
+                      hover:bg-gray-100
+                      disabled:opacity-40
+                    "
                             >
-                              {item}
+                              <Minus size={15} />
                             </button>
 
-                          ))}
+                            <span className="font-semibold w-5 text-center">
+                              {adults}
+                            </span>
 
-                        </div>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setAdults(adults + 1)
+                              }
+                              className="
+                      w-8
+                      h-8
+                      rounded-full
+                      border
+                      flex
+                      items-center
+                      justify-center
+                      hover:bg-gray-100
+                    "
+                            >
+                              <Plus size={15} />
+                            </button>
 
-                      )}
-
-                    </div>
-
-                    <div className="h-12 w-px bg-gray-200" />
-
-                    <div className="relative flex-1">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          document.getElementById("tour-date-picker").showPicker();
-                        }}
-                        className="w-full flex items-center gap-3 px-5 py-3 rounded-xl hover:bg-gray-50 text-left"
-                      >
-                        <CalendarDays
-                          size={22}
-                          className="text-orange-500"
-                        />
-
-                        <div className="flex-1">
-                          <p className="text-xs text-gray-500">
-                            Select Date
-                          </p>
-
-                          <p className="font-semibold text-gray-800">
-                            {date
-                              ? new Date(date + "T00:00:00").toLocaleDateString(
-                                "en-IN",
-                                {
-                                  day: "2-digit",
-                                  month: "short",
-                                  year: "numeric",
-                                }
-                              )
-                              : "Choose your date"}
-                          </p>
-                        </div>
-
-                        <ChevronDown
-                          size={18}
-                          className="text-gray-500"
-                        />
-                      </button>
-
-
-                      <input
-                        id="tour-date-picker"
-                        type="date"
-                        value={date}
-                        onChange={(e) => setDate(e.target.value)}
-                        min={new Date().toISOString().split("T")[0]}
-                        className="absolute opacity-0 pointer-events-none w-0 h-0"
-                      />
-                    </div>
-
-                    <div className="h-12 w-px bg-gray-200" />
-
-                    <div className="relative flex-1">
-                      <button
-                        onClick={() => {
-                          setShowGuests(!showGuests);
-                          setShowCities(false);
-                        }}
-                        className="w-full flex items-center gap-3 px-5 py-3 rounded-xl hover:bg-gray-50 text-left"
-                      >
-                        <Users size={22} className="text-orange-500" />
-
-                        <div className="flex-1">
-                          <p className="text-xs text-gray-500">
-                            Guests
-                          </p>
-
-                          <p className="font-semibold text-gray-800">
-                            {adults} Adults, {children} Child
-                            {children !== 1 && "ren"}
-                          </p>
-                        </div>
-
-                        <ChevronDown size={18} className="text-gray-500" />
-                      </button>
-
-                      {showGuests && (
-                        <div className="absolute right-0 top-full mt-2 w-72 bg-white rounded-xl shadow-xl border p-5 z-50">
-                          <div className="flex items-center justify-between mb-5">
-                            <div>
-                              <p className="font-semibold text-gray-800">
-                                Adults
-                              </p>
-                              <p className="text-xs text-gray-500">
-                                Age 13+
-                              </p>
-                            </div>
-
-                            <div className="flex items-center gap-3">
-                              <button
-                                disabled={adults <= 1}
-                                onClick={() =>
-                                  setAdults(Math.max(1, adults - 1))
-                                }
-                                className="w-8 h-8 rounded-full border flex items-center justify-center hover:bg-gray-100 disabled:opacity-40"
-                              >
-                                <Minus size={15} />
-                              </button>
-
-                              <span className="font-semibold w-5 text-center">
-                                {adults}
-                              </span>
-
-                              <button
-                                onClick={() => setAdults(adults + 1)}
-                                className="w-8 h-8 rounded-full border flex items-center justify-center hover:bg-gray-100"
-                              >
-                                <Plus size={15} />
-                              </button>
-                            </div>
                           </div>
 
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="font-semibold text-gray-800">
-                                Children
-                              </p>
-                              <p className="text-xs text-gray-500">
-                                Age 0–12
-                              </p>
-                            </div>
+                        </div>
 
-                            <div className="flex items-center gap-3">
-                              <button
-                                disabled={children <= 0}
-                                onClick={() =>
-                                  setChildren(Math.max(0, children - 1))
-                                }
-                                className="w-8 h-8 rounded-full border flex items-center justify-center hover:bg-gray-100 disabled:opacity-40"
-                              >
-                                <Minus size={15} />
-                              </button>
+                        <div className="flex items-center justify-between">
 
-                              <span className="font-semibold w-5 text-center">
-                                {children}
-                              </span>
+                          <div>
+                            <p className="font-semibold text-gray-800">
+                              Children
+                            </p>
 
-                              <button
-                                onClick={() =>
-                                  setChildren(children + 1)
-                                }
-                                className="w-8 h-8 rounded-full border flex items-center justify-center hover:bg-gray-100"
-                              >
-                                <Plus size={15} />
-                              </button>
-                            </div>
+                            <p className="text-xs text-gray-500">
+                              Age 0–12
+                            </p>
                           </div>
 
-                          <button
-                            onClick={() => setShowGuests(false)}
-                            className="mt-5 w-full bg-blue-500 text-white py-2 rounded-lg font-medium"
-                          >
-                            Done
-                          </button>
+                          <div className="flex items-center gap-3">
+
+                            <button
+                              type="button"
+                              disabled={children <= 0}
+                              onClick={() =>
+                                setChildren(
+                                  Math.max(0, children - 1)
+                                )
+                              }
+                              className="
+                      w-8
+                      h-8
+                      rounded-full
+                      border
+                      flex
+                      items-center
+                      justify-center
+                      hover:bg-gray-100
+                      disabled:opacity-40
+                    "
+                            >
+                              <Minus size={15} />
+                            </button>
+
+                            <span className="font-semibold w-5 text-center">
+                              {children}
+                            </span>
+
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setChildren(children + 1)
+                              }
+                              className="
+                      w-8
+                      h-8
+                      rounded-full
+                      border
+                      flex
+                      items-center
+                      justify-center
+                      hover:bg-gray-100
+                    "
+                            >
+                              <Plus size={15} />
+                            </button>
+
+                          </div>
+
                         </div>
-                      )}
-                    </div>
 
+                        <button
+                          type="button"
+                          onClick={() => setShowGuests(false)}
+                          className="
+                  mt-5
+                  w-full
+                  bg-blue-500
+                  hover:bg-blue-600
+                  text-white
+                  py-2
+                  rounded-lg
+                  font-medium
+                  transition
+                "
+                        >
+                          Done
+                        </button>
 
-                    {/* <button
-                      onClick={handleSearch}
-                      className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-7 py-4 rounded-xl flex items-center gap-2 transition"
-                    >
-                      Explore Tours
-                      <span className="text-lg">→</span>
-                    </button> */}
+                      </div>
+                    )}
 
                   </div>
 
@@ -364,9 +526,7 @@ export default function CityTour() {
               </div>
 
             </div>
-
           </div>
-
         </section>
 
         <div className="max-w-7xl mx-auto p-6 grid lg:grid-cols-3 gap-6">
