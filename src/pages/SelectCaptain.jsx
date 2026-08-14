@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
 const captains = [
   {
     id: 1,
@@ -93,6 +95,25 @@ const StepTitle = ({ title, subtitle }) => (
 
 export default function SelectCaptain() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const bookingData = location.state || {};
+  const {
+    city,
+    date,
+    adults,
+    children,
+  } = bookingData;
+  const {
+    selectedPlaces = [],
+    duration = "",
+    customHours = "",
+    selectedVehicle = null,
+    pickupLocation = "",
+    placesCharge = 0,
+    vehicleCharge = 0,
+    durationCharge = 0,
+  } = location.state || {};
+
   const [selectedCaptain, setSelectedCaptain] = useState(null);
   const [showAll, setShowAll] = useState(false);
 
@@ -106,6 +127,7 @@ export default function SelectCaptain() {
     if (!selectedCaptain) return;
 
     const tourData = {
+      ...bookingData,
       places: selectedPlaces,
       duration,
       customHours,
@@ -117,13 +139,12 @@ export default function SelectCaptain() {
       durationCharge:
         duration === "Custom"
           ? Number(customHours || 0) * 200
-          : durationPrice[duration] || 0,
+          : durationCharge[duration] || 0,
       total:
-        selectedPlaces.length * 150 +
-        (selectedVehicle?.price || 0) +
-        (duration === "Custom"
-          ? Number(customHours || 0) * 200
-          : durationPrice[duration] || 0),
+        placesCharge +
+        vehicleCharge +
+        durationCharge +
+        (selectedCaptain?.price || 0),
     };
 
     navigate("/tour-payment", {
@@ -195,8 +216,8 @@ export default function SelectCaptain() {
                   whileHover={{ y: -2 }}
                   onClick={() => setSelectedCaptain(captain)}
                   className={`relative cursor-pointer rounded-3xl border p-5 transition-all ${selected
-                      ? "border-blue-500 bg-blue-50 shadow-lg"
-                      : "border-gray-200 hover:border-blue-300 hover:shadow-md"
+                    ? "border-blue-500 bg-blue-50 shadow-lg"
+                    : "border-gray-200 hover:border-blue-300 hover:shadow-md"
                     }`}
                 >
 
@@ -299,8 +320,8 @@ export default function SelectCaptain() {
                           setSelectedCaptain(captain);
                         }}
                         className={`mt-4 px-4 py-2 rounded-xl text-sm font-semibold transition ${selected
-                            ? "bg-blue-600 text-white"
-                            : "bg-gray-900 text-white hover:bg-blue-600"
+                          ? "bg-blue-600 text-white"
+                          : "bg-gray-900 text-white hover:bg-blue-600"
                           }`}
                       >
                         {selected

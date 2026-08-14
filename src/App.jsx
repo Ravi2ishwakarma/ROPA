@@ -34,7 +34,6 @@ function App() {
         <Route path="/customtour" element={<CustomTour/>}/>
         <Route path="/tourcaptain" element={<SelectCaptain/>}/>
         <Route path="/tour-payment" element={<TourPayment/>}/>
-
       </Routes>
       <Footer/>
     </>

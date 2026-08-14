@@ -53,8 +53,14 @@ const tours = [
 ];
 
 export default function CityTour() {
-  const navigate = useNavigate();
 
+  const [bookingData, setBookingData]=useState(
+    {city:"",
+    date:"",
+    adults:1,
+    children:0,
+  })
+  const navigate = useNavigate();
   const [city, setCity] = useState("Bhopal, MP");
   const [date, setDate] = useState("");
   const [showCities, setShowCities] = useState(false);
@@ -76,6 +82,11 @@ export default function CityTour() {
     "Delhi, India",
     "Mumbai, Maharashtra",
   ];
+  const captain=[
+    {
+
+    }
+  ]
 
   const handleSearch = () => {
     const searchCity = city.split(",")[0].toLowerCase();
@@ -86,7 +97,18 @@ export default function CityTour() {
 
     setFilteredTours(result.length ? result : tours);
   };
-
+ 
+  // const handleContinueToBook=()=>
+  // {
+  //   setBookingData(
+  //     {
+  //       city,
+  //       date,
+  //       adults,
+  //       children,
+  //     }
+  //   )
+  // }
   return (
     <>
       <div className="min-h-screen  bg-gray-100">
@@ -101,7 +123,6 @@ export default function CityTour() {
             />
 
           </div>
-
           <div className="absolute inset-0" />
 
           <div className="absolute inset-0 flex items-center">
@@ -250,10 +271,7 @@ export default function CityTour() {
               py-3
               rounded-xl
               hover:bg-gray-50
-              transition
-              text-left
-            "
-                    >
+              transition text-left">
 
                       <CalendarDays
                         size={22}
@@ -295,15 +313,8 @@ export default function CityTour() {
                       type="date"
                       value={date}
                       onChange={(e) => setDate(e.target.value)}
-                      min={new Date().toISOString().split("T")[0]}
-                      className="
-              absolute
-              opacity-0
-              pointer-events-none
-              w-0
-              h-0
-            "
-                    />
+                      min={new Date(Date.now()+ 24 * 60 * 60 * 1000).toISOString().split("T")[0]}
+                      className="absolute opacity-0 pointer-events-none w-0 h-0"/>
 
                   </div>
                   <div className="hidden lg:block h-12 w-px bg-gray-200" />
@@ -539,12 +550,21 @@ export default function CityTour() {
                 Available Tours
               </h2>
 
-              <Link
-                to="/customtour"
+              <button
+                type="button"
+                onClick={() => {
+                 setBookingData({city,date,adults,children})
+                ,
+                  navigate("/customtour", {
+                    state: {
+                      city,
+                      date,
+                      adults,
+                      children,}})}}
                 className=" bg-gray-900 hover: bg-gray-700 text-white px-5 py-3 rounded-xl font-semibold"
               >
                 Create Custom Tour
-              </Link>
+              </button>
 
             </div>
             {!showDetails && (
@@ -719,14 +739,34 @@ export default function CityTour() {
               </div>
 
               <button
-                onClick={() =>
-                  navigate("/customtour")
-                }
-                className="w-full mt-6 bg-blue-500 hover:bg-blue-600 text-white py-4 rounded-xl font-bold"
+                type="button"
+                onClick={() => {
+                  setBookingData({city,date,adults,children}),
+                  navigate("/tour-payment", {
+                    state: {
+                      city,
+                      date,
+                      adults,
+                      children,
+                      tour: selectedTour,
+                      captain: {
+                        name: selectedTour.captainName || "Rajesh Kumar",
+                        image:
+                          selectedTour.captainImage ||
+                          "https://via.placeholder.com/100",
+                        rating: selectedTour.captainRating || "4.9",
+                        experience: selectedTour.experience || "5+ Years",
+                        languages: selectedTour.languages || "Hindi, English",
+                        vahicle:selectedTour.vehicle|| "Toyota" ,
+                      },
+                      pickupLocation: "",
+                    },
+                  });
+                }}
+                className="w-full bg-blue-500 hover:bg-blue-600 text-white py-4 rounded-xl font-semibold transition"
               >
-                Continue To Book
+                Continue to Book
               </button>
-
             </div>
 
             <div className="bg-white rounded-2xl  shadow p-6 mt-6">
@@ -792,126 +832,307 @@ export default function CityTour() {
           </div>
 
           {showDetails && selectedTour && (
-            <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-5">
 
-              <div className="bg-white rounded-3xl overflow-hidden w-full max-w-4xl">
+              <div className="bg-white rounded-2xl sm:rounded-3xl overflow-hidden w-full max-w-5xl max-h-[95vh] overflow-y-auto">
 
-                <img
-                  src={selectedTour.image}
-                  alt={selectedTour.name}
-                  className="w-full h-80 object-cover"
-                />
+                <div className="relative">
 
-                <div className="p-8">
+                  <img
+                    src={selectedTour.image}
+                    alt={selectedTour.name}
+                    className="w-full h-48 sm:h-64 md:h-72 lg:h-80 object-cover"
+                  />
 
-                  <div className="flex justify-between items-start">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowDetails(false);
+                      setSelectedTour(null);
+                    }}
+                    className="
+            absolute
+            top-3
+            right-3
+            sm:top-5
+            sm:right-5
+            w-9
+            h-9
+            sm:w-10
+            sm:h-10
+            rounded-full
+            bg-white/95
+            flex
+            items-center
+            justify-center
+            text-gray-700
+            hover:bg-white
+            shadow
+            transition
+          "
+                  >
+                    ✕
+                  </button>
 
-                    <div>
+                </div>
 
-                      <h2 className="text-3xl font-bold">
-                        {selectedTour.name}
-                      </h2>
+                <div className="p-4 sm:p-6 md:p-8">
 
-                      <p className="text-gray-600 mt-3">
-                        {selectedTour.description}
-                      </p>
+                  <div className="mb-6">
+
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+
+                      <div>
+                        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                          {selectedTour.name}
+                        </h2>
+
+                        <p className="text-gray-600 text-sm sm:text-base mt-2 leading-relaxed">
+                          {selectedTour.description}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-1 bg-yellow-50 px-3 py-1.5 rounded-full w-fit">
+                        <span className="text-yellow-500">
+                          ★
+                        </span>
+
+                        <span className="font-semibold text-sm">
+                          {selectedTour.rating || "4.8"}
+                        </span>
+                      </div>
 
                     </div>
 
-                    <button
-                      onClick={() => setSelectedTour(null)}
-                      className="text-3xl"
-                    >
-                      ✕
-                    </button>
-
                   </div>
 
-                  <div className="grid md:grid-cols-3 gap-6 mt-8">
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
 
                     <div className="bg-gray-50 p-4 rounded-xl">
-
-                      <p className="text-gray-500">
+                      <p className="text-xs sm:text-sm text-gray-500">
                         Duration
                       </p>
 
-                      <p className="font-bold text-lg">
+                      <p className="font-bold text-base sm:text-lg mt-1">
                         {selectedTour.duration}
                       </p>
-
                     </div>
 
                     <div className="bg-gray-50 p-4 rounded-xl">
-
-                      <p className="text-gray-500">
+                      <p className="text-xs sm:text-sm text-gray-500">
                         Places Covered
                       </p>
 
-                      <p className="font-bold text-lg">
+                      <p className="font-bold text-base sm:text-lg mt-1">
                         {selectedTour.places}
                       </p>
-
                     </div>
 
                     <div className="bg-gray-50 p-4 rounded-xl">
-
-                      <p className="text-gray-500">
-                        Price
+                      <p className="text-xs sm:text-sm text-gray-500">
+                        Tour Price
                       </p>
 
-                      <p className="font-bold text-green-600 text-xl">
+                      <p className="font-bold text-green-600 text-xl mt-1">
                         {selectedTour.price}
                       </p>
-
                     </div>
 
                   </div>
 
-                  <div className="mt-8">
 
-                    <h3 className="font-bold text-xl mb-4">
+                  <div className="mt-7 sm:mt-8">
+
+                    <h3 className="font-bold text-lg sm:text-xl text-gray-900 mb-4">
                       Places Included
                     </h3>
 
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex flex-wrap gap-2 sm:gap-3">
 
-                      <span className="bg-blue-100 px-4 py-2 rounded-full">
-                        Upper Lake
-                      </span>
-
-                      <span className="bg-blue-100 px-4 py-2 rounded-full">
-                        Taj-ul-Masajid
-                      </span>
-
-                      <span className="bg-blue-100 px-4 py-2 rounded-full">
-                        State Museum
-                      </span>
-
-                      <span className="bg-blue-100 px-4 py-2 rounded-full">
-                        Local Market
-                      </span>
+                      {(selectedTour.placesIncluded || [
+                        "Upper Lake",
+                        "Taj-ul-Masajid",
+                        "State Museum",
+                        "Local Market"
+                      ]).map((place, index) => (
+                        <span
+                          key={index}
+                          className="
+                  bg-blue-50
+                  text-blue-700
+                  border
+                  border-blue-100
+                  px-3
+                  sm:px-4
+                  py-2
+                  rounded-full
+                  text-sm
+                "
+                        >
+                          {place}
+                        </span>
+                      ))}
 
                     </div>
 
                   </div>
 
-                  <div className="flex gap-4 mt-10">
+
+                  <div className="mt-7 sm:mt-8 border-t pt-6">
+
+                    <div className="flex items-center justify-between mb-4">
+
+                      <h3 className="font-bold text-lg sm:text-xl text-gray-900">
+                        Your Captain
+                      </h3>
+
+                      <span className="text-xs sm:text-sm text-green-600 bg-green-50 px-3 py-1.5 rounded-full">
+                        Available
+                      </span>
+
+                    </div>
+
+
+                    <div className="bg-gray-50 rounded-2xl p-4 sm:p-5">
+
+                      <div className="flex flex-col sm:flex-row gap-4">
+
+                        <div className="flex items-center gap-3 sm:gap-4">
+
+                          <img
+                            src={
+                              selectedTour.captainImage ||
+                              "https://via.placeholder.com/100"
+                            }
+                            alt={selectedTour.captainName || "Captain"}
+                            className="
+                    w-16
+                    h-16
+                    sm:w-20
+                    sm:h-20
+                    rounded-full
+                    object-cover
+                    border-2
+                    border-white
+                    shadow
+                    flex-shrink-0
+                  "
+                          />
+
+                          <div>
+
+                            <h4 className="font-bold text-gray-900 text-base sm:text-lg">
+                              {selectedTour.captainName || "Rajesh Kumar"}
+                            </h4>
+
+                            <div className="flex items-center gap-2 mt-1">
+
+                              <span className="text-yellow-500">
+                                ★
+                              </span>
+
+                              <span className="font-semibold text-sm">
+                                {selectedTour.captainRating || "4.9"}
+                              </span>
+
+                              <span className="text-gray-400 text-sm">
+                                Captain Rating
+                              </span>
+
+                            </div>
+
+                          </div>
+
+                        </div>
+
+
+                        <div className="flex-1 grid grid-cols-2 sm:grid-cols-3 gap-4 sm:ml-auto">
+
+                          <div>
+                            <p className="text-xs text-gray-500 mb-1">
+                              Vehicle
+                            </p>
+
+                            <p className="font-semibold text-gray-800 text-sm">
+                              {selectedTour.vehicle || "Toyota Etios"}
+                            </p>
+                          </div>
+
+                          <div>
+                            <p className="text-xs text-gray-500 mb-1">
+                              Experience
+                            </p>
+
+                            <p className="font-semibold text-gray-800 text-sm">
+                              {selectedTour.experience || "5+ Years"}
+                            </p>
+                          </div>
+
+                          <div className="col-span-2 sm:col-span-1">
+                            <p className="text-xs text-gray-500 mb-1">
+                              Languages
+                            </p>
+
+                            <p className="font-semibold text-gray-800 text-sm">
+                              {selectedTour.languages || "Hindi, English"}
+                            </p>
+                          </div>
+
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+
+                  <div className="flex flex-col-reverse sm:flex-row gap-3 sm:gap-4 mt-7 sm:mt-10">
 
                     <button
+                      type="button"
                       onClick={() => {
                         setShowDetails(false);
-                        setSelectedTour(tour);
+                        setSelectedTour(null);
                       }}
-                      className="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-4 rounded-xl font-semibold"
+                      className="
+              w-full
+              sm:w-auto
+              sm:px-8
+              border
+              border-gray-300
+              hover:bg-gray-50
+              text-gray-700
+              py-3.5
+              sm:py-4
+              rounded-xl
+              font-semibold
+              transition
+            "
                     >
-                      Select
+                      Close
                     </button>
 
                     <button
-                      onClick={() => setSelectedTour(null)}
-                      className="px-8 border rounded-xl"
+                      type="button"
+                      onClick={() => {
+                        setShowDetails(false);
+                        setSelectedTour(selectedTour);
+                      }}
+                      className="
+              flex-1
+              bg-blue-500
+              hover:bg-blue-600
+              text-white
+              py-3.5
+              sm:py-4
+              rounded-xl
+              font-semibold
+              transition
+            "
                     >
-                      Close
+                      Select This Tour
                     </button>
 
                   </div>

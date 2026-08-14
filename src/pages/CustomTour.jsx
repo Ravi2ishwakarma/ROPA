@@ -6,7 +6,7 @@ import scooter from "../assests/scooter.png";
 import auto from "../assests/auto.png";
 import car from "../assests/car.png";
 import pcar from "../assests/pcar.png";
-
+import { useLocation } from "react-router-dom";
 const vehicles = [
   { name: "Bike", image: bike, price: 200 },
   { name: "Scooter", image: scooter, price: 300 },
@@ -57,6 +57,13 @@ export default function CustomTourBuilder() {
   const [customHours, setCustomHours] = useState("");
   const [pickupLocation, setPickupLocation] = useState("");
   const navigate = useNavigate();
+  const bookingData = location.state || {};
+  const {
+    city,
+    date,
+    adults,
+    children,
+  } = bookingData;
 
 
   const handlePlaceSelect = (place) => {
@@ -125,8 +132,9 @@ export default function CustomTourBuilder() {
       return;
     }
 
-    navigate("/select-captain", {
+    navigate("/tourcaptain", {
       state: {
+        ...bookingData,
         selectedPlaces,
         duration,
         customHours,
